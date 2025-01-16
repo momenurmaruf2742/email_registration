@@ -4,6 +4,7 @@ import base64
 from email.message import EmailMessage
 
 from dotenv import load_dotenv
+from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google.oauth2.credentials import Credentials
@@ -16,6 +17,7 @@ EMAIL = os.getenv("GMAIL_USER")
 # Gmail API scopes
 SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
 
+# for normal running
 def authenticate():
     """Authenticate with Gmail API and create a token.json file if it doesn't exist."""
     if not os.path.exists("token.json"):
@@ -65,3 +67,37 @@ def send_welcome_email(recipient_email: str, first_name: str):
         print(f"Email sent successfully. Message ID: {send_message['id']}")
     except HttpError as error:
         print(f"An error occurred: {error}")
+
+# def send_welcome_email(recipient_email: str, first_name: str):
+#     """
+#     Send a welcome email using Gmail API with a service account.
+#     """
+#     try:
+#         # Authenticate using service account credentials
+#         creds = service_account.Credentials.from_service_account_file(
+#             "service.json",
+#             scopes=SCOPES
+#         )
+#         service = build("gmail", "v1", credentials=creds)
+#
+#         # Create the email
+#         message = EmailMessage()
+#         message.set_content(f"Hi {first_name},\n\nWelcome to our service!")
+#         message["To"] = recipient_email
+#         message["From"] = EMAIL  # Replace with your email
+#         message["Subject"] = "Welcome to Our Service"
+#
+#         # Encode the message
+#         encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
+#         create_message = {"raw": encoded_message}
+#
+#         # Send the email
+#         send_message = (
+#             service.users()
+#             .messages()
+#             .send(userId="me", body=create_message)
+#             .execute()
+#         )
+#         print(f"Email sent successfully. Message ID: {send_message['id']}")
+#     except HttpError as error:
+#         print(f"An error occurred: {error}")
