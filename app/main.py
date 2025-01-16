@@ -5,7 +5,7 @@ from app.json_formator import format_response
 from app.database import async_session, init_db
 from app.schemas import UserCreate
 from app.email_sender import send_welcome_email
-import app.crud
+from app import crud
 
 app = FastAPI()
 
