@@ -2,11 +2,17 @@ import os
 import json
 import base64
 from email.message import EmailMessage
+
+from dotenv import load_dotenv
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 
+load_dotenv()
+
+# Retrieve the email from the .env file
+EMAIL = os.getenv("GMAIL_USER")
 # Gmail API scopes
 SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
 
@@ -42,7 +48,7 @@ def send_welcome_email(recipient_email: str, first_name: str):
         message = EmailMessage()
         message.set_content(f"Hi {first_name},\n\nWelcome to our service!")
         message["To"] = recipient_email
-        message["From"] = "your-email@gmail.com"  # Replace with your email
+        message["From"] = EMAIL  # Replace with your email
         message["Subject"] = "Welcome to Our Service"
 
         # Encode the message
